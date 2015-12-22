@@ -5,9 +5,12 @@
 // @description  Craigslist apartment search is most useful on the map view, since after all real estate is about location, location, location, but other factors matter too.  For example you probably want to see listings that are reasonably new but not just from today, but the current UI only lets you pick "Listed today" or no filter.  This tampermonkey script lets you eliminate listings by a configurable age range.
 // @author       Ivan Joukov
 // @include      http://*.craigslist.tld/search/apa
+// @require      https://code.jquery.com/jquery-1.11.3.min.js
 // @grant        none
 // ==/UserScript==
 /* jshint -W097 */
+
+this.$ = this.jQuery = jQuery.noConflict(true);
 
 (function (window, document, $, undefined) {
     'use strict';
