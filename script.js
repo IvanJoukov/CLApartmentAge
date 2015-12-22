@@ -21,7 +21,9 @@ this.$ = this.jQuery = jQuery.noConflict(true);
 	}
 
     var minAgeSlider, maxAgeSlider, $minDaysSpan, $maxDaysSpan, $filteringProgress;
-	minAgeSlider = document.createElement("INPUT");
+    
+    // Create and set up the slider elements that will form our UI
+    minAgeSlider = document.createElement("INPUT");
     minAgeSlider.setAttribute("type", "range");
     minAgeSlider.setAttribute("min", "0");
     minAgeSlider.setAttribute("max", "30");
@@ -35,6 +37,7 @@ this.$ = this.jQuery = jQuery.noConflict(true);
     maxAgeSlider.value = 30;
     maxAgeSlider.id = "maxAgeSlider";
 
+    // Replace the default posted today checkbox with our UI
     $('.postedToday > input').remove();
     $('.postedToday').append("<div>Post min age <span id='minDays'>0</span> (days)<div>").append(minAgeSlider);
     $('.postedToday').append("<div>Posting max age <span id='maxDays'>30</span>(days)<div>").append(maxAgeSlider);
@@ -46,6 +49,7 @@ this.$ = this.jQuery = jQuery.noConflict(true);
 
 
     //Borrowed from https://davidwalsh.name/javascript-debounce-function
+    // Because filtering is a pretty expensive operation, let's delay it until the user has finished adjusting the sliders
     function debounce(func, wait, immediate) {
         var timeout;
         return function () {
@@ -67,6 +71,10 @@ this.$ = this.jQuery = jQuery.noConflict(true);
     }
 
     // Inspired by http://stackoverflow.com/a/10344560
+    // This prevents locking the UI while doing the pretty slow/expensive filtering
+    // The basic idea is rather than iterating over all the (possibly thousands) of listings in a single blocking call
+    // We can break up the processing into small chunks, pausing often enough to allow the UI thread to run to prevent
+    // UI locking from the user's perspective
     function processLargeArrayAsync(array, fn, maxTimePerChunk, context, done) {
         context = context || window;
         maxTimePerChunk = maxTimePerChunk || 200;
